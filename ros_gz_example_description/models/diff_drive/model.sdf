@@ -16,9 +16,10 @@
         </inertial>
         <visual name='visual_chassis'>
           <geometry>
-            <box>
-              <size>2.01142 1 0.568726</size>
-            </box>
+            <cylinder>
+              <radius>1</radius>
+              <length>0.5</length>
+            </cylinder>
           </geometry>
           <material>
             <ambient>0.5 0.5 1.0 1</ambient>
@@ -28,15 +29,16 @@
         </visual>
         <collision name='collision_chassis'>
           <geometry>
-            <box>
-              <size>2.01142 1 0.568726</size>
-            </box>
+            <cylinder>
+              <radius>1</radius>
+              <length>0.5</length>
+            </cylinder>
           </geometry>
         </collision>
       </link>
 
       <link name='left_wheel'>
-        <pose>0.554283 0.625029 -0.025 -1.5707 0 0</pose>
+        <pose relative_to="chassis">-0.5 0.6 -0.2 -1.5707 0 0</pose> <!--angles are in radian-->
         <inertial>
           <mass>2</mass>
           <inertia>
@@ -50,9 +52,10 @@
         </inertial>
         <visual name='visual_left_wheel'>
           <geometry>
-            <sphere>
-              <radius>0.3</radius>
-            </sphere>
+            <cylinder>
+              <radius>0.2</radius>
+              <length>0.2</length>
+            </cylinder>
           </geometry>
           <material>
             <ambient>0.2 0.2 0.2 1</ambient>
@@ -62,15 +65,16 @@
         </visual>
         <collision name='collision_left_wheel'>
           <geometry>
-            <sphere>
-              <radius>0.3</radius>
-            </sphere>
+            <cylinder>
+              <radius>0.2</radius>
+              <length>0.2</length>
+            </cylinder>
           </geometry>
         </collision>
       </link>
 
       <link name='right_wheel'>
-        <pose>0.554282 -0.625029 -0.025 -1.5707 0 0</pose>
+        <pose relative_to="chassis">-0.5 -0.6 -0.2 -1.5707 0 0</pose> <!--angles are in radian-->
         <inertial>
           <mass>2</mass>
           <inertia>
@@ -84,9 +88,10 @@
         </inertial>
         <visual name='visual_right_wheel'>
           <geometry>
-            <sphere>
-              <radius>0.3</radius>
-            </sphere>
+            <cylinder>
+              <radius>0.2</radius>
+              <length>0.2</length>
+            </cylinder>
           </geometry>
           <material>
             <ambient>0.2 0.2 0.2 1</ambient>
@@ -96,15 +101,21 @@
         </visual>
         <collision name='collision_right_wheel'>
           <geometry>
-            <sphere>
-              <radius>0.3</radius>
-            </sphere>
+            <cylinder>
+              <radius>0.2</radius>
+              <length>0.2</length>
+            </cylinder>
           </geometry>
         </collision>
       </link>
 
+      <frame name="caster_frame" attached_to='chassis'>
+        <pose>0.8 0 -0.2 0 0 0</pose>
+      </frame>
+
+            <!--caster wheel-->
       <link name='caster'>
-        <pose>-0.957138 -0 -0.125 0 -0 0</pose>
+        <pose relative_to='caster_frame'/>
         <inertial>
           <mass>1</mass>
           <inertia>
@@ -230,8 +241,8 @@
         name="ignition::gazebo::systems::DiffDrive">
         <left_joint>left_wheel_joint</left_joint>
         <right_joint>right_wheel_joint</right_joint>
-        <wheel_separation>1.25</wheel_separation>
-        <wheel_radius>0.3</wheel_radius>
+        <wheel_separation>1.2</wheel_separation>
+        <wheel_radius>0.2</wheel_radius>
         <odom_publish_frequency>1</odom_publish_frequency>
         <max_linear_acceleration>1</max_linear_acceleration>
         <min_linear_acceleration>-1</min_linear_acceleration>

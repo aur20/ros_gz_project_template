@@ -36,7 +36,7 @@
     </plugin>
 
     <light name="sun" type="directional">
-      <cast_shadows>true</cast_shadows>
+      <cast_shadows>false</cast_shadows>
       <pose>0 0 10 0 0 0</pose>
       <diffuse>0.8 0.8 0.8 1</diffuse>
       <specular>0.2 0.2 0.2 1</specular>
@@ -105,5 +105,45 @@
       </plugin>
     </model>
 
+    <!-- Moving Left-->
+    <plugin filename="gz-sim-triggered-publisher-system"
+            name="gz::sim::systems::TriggeredPublisher">
+        <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+            <match field="data">16777234</match>
+        </input>
+        <output type="gz.msgs.Twist" topic="/model/diff_drive/cmd_vel">
+            linear: {x: 0.0}, angular: {z: 0.5}
+        </output>
+    </plugin>
+    <!-- Moving Forward-->
+    <plugin filename="gz-sim-triggered-publisher-system"
+            name="gz::sim::systems::TriggeredPublisher">
+        <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+            <match field="data">16777235</match>
+        </input>
+        <output type="gz.msgs.Twist" topic="/model/diff_drive/cmd_vel">
+            linear: {x: 0.5}, angular: {z: 0.0}
+        </output>
+    </plugin>
+    <!-- Moving Right-->
+    <plugin filename="gz-sim-triggered-publisher-system"
+            name="gz::sim::systems::TriggeredPublisher">
+        <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+            <match field="data">16777236</match>
+        </input>
+        <output type="gz.msgs.Twist" topic="/model/diff_drive/cmd_vel">
+            linear: {x: 0.0}, angular: {z: -0.5}
+        </output>
+    </plugin>
+    <!-- Moving Backward-->
+    <plugin filename="gz-sim-triggered-publisher-system"
+            name="gz::sim::systems::TriggeredPublisher">
+        <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+            <match field="data">16777237</match>
+        </input>
+        <output type="gz.msgs.Twist" topic="/model/diff_drive/cmd_vel">
+            linear: {x: -0.5}, angular: {z: 0.0}
+        </output>
+    </plugin>
   </world>
 </sdf>

@@ -1,3 +1,8 @@
+# Customization
+
+* Robot model: now round as a vacuum cleaner
+* Gazebo robot control: Plugins (3 dots top-right corner) -> Keypress
+
 # ros_gz_project_template
 A template project integrating ROS 2 and Gazebo simulator.
 
