@@ -113,7 +113,7 @@
         <pose>0.8 0 -0.2 0 0 0</pose>
       </frame>
 
-            <!--caster wheel-->
+      <!--caster wheel-->
       <link name='caster'>
         <pose relative_to='caster_frame'/>
         <inertial>

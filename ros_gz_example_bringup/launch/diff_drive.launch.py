@@ -19,6 +19,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription
+from launch.actions import ExecuteProcess
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
@@ -44,11 +45,17 @@ def generate_launch_description():
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')),
-        launch_arguments={'gz_args': PathJoinSubstitution([
+        launch_arguments={'gz_args': [PathJoinSubstitution([
             pkg_project_gazebo,
             'worlds',
-            'diff_drive.sdf'
-        ])}.items(),
+            'diff_drive.sdf',
+        ]), ' -s']}.items(),
+    )
+
+    # Start the Gazebo simulator
+    gz_start = ExecuteProcess(
+        cmd=['gz', 'service', '-s', '/world/demo/control', '--reqtype', 'gz.msgs.WorldControl', '--reptype', 'gz.msgs.Boolean', '--timeout', '30000', '--req', "'pause: false'"],
+        output='screen'
     )
 
     # Takes the description and joint angles as inputs and publishes the 3D poses of the robot links
@@ -88,5 +95,6 @@ def generate_launch_description():
                               description='Open RViz.'),
         bridge,
         robot_state_publisher,
-        rviz
+        rviz,
+        gz_start
     ])
