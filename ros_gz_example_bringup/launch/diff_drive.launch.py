@@ -70,6 +70,17 @@ def generate_launch_description():
         ]
     )
 
+    nav_server = Node(
+        package='ros_gz_topic_server',
+        executable='navigate_srv',
+        name='navigate_srv',
+        output='screen',
+        namespace='/diff_drive',
+        parameters=[
+
+        ]
+    )
+
     # Visualize in RViz
     rviz = Node(
        package='rviz2',
@@ -96,5 +107,6 @@ def generate_launch_description():
         bridge,
         robot_state_publisher,
         rviz,
-        gz_start
+        gz_start,
+        nav_server,
     ])

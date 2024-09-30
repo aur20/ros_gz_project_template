@@ -2,6 +2,7 @@
 
 * Robot model: now round as a vacuum cleaner
 * Gazebo robot control: Plugins (3 dots top-right corner) -> Keypress
+* Topic server for BUG control: ros2 action send_goal /diff_drive/navigate action_tutorials_rosgz/action/Navigate '{target_distance: 5, angle: 1.}'
 
 # ros_gz_project_template
 A template project integrating ROS 2 and Gazebo simulator.

@@ -1,0 +1,15 @@
+# Goal Definition (Requests)
+float32 target_distance # Distance to go straight (meters)
+float32 angle           # Turn before advancing
+
+---
+# Result Definition
+string stop_reason
+float32 final_distance_to_obstacle
+float32 final_distance_to_target
+
+---
+# Feedback Definition
+float32 distance_to_target
+float32 distance_to_obstacle_frontleft
+float32 distance_to_obstacle_frontright
