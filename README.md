@@ -1,6 +1,6 @@
 # Customization
 
-* Robot model: now round as a vacuum cleaner
+* Robot model: now round as a vacuum cleaner -> edit `ros_gz_project_template/ros_gz_example_bringup/launch/diff_drive.launch.py` line `51` to select world `'diff_drive.sdf'`/`'diff_drive2.sdf'`
 * Gazebo robot control: Plugins (3 dots top-right corner) -> Keypress
 * Topic server for BUG control: ros2 action send_goal /diff_drive/navigate action_tutorials_rosgz/action/Navigate '{target_distance: 5, angle: 1.}'
 

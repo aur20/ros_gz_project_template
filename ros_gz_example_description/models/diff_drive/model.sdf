@@ -2,7 +2,7 @@
 <sdf version="1.8">
     <model name='diff_drive'>
       <link name='chassis'>
-        <pose>-0.151427 -0 0.175 0 -0 0</pose>
+        <pose>0. 0. 0.3 0 -0 0</pose>
         <inertial>
           <mass>1.14395</mass>
           <inertia>
@@ -38,7 +38,7 @@
       </link>
 
       <link name='left_wheel'>
-        <pose relative_to="chassis">-0.5 0.6 -0.2 -1.5707 0 0</pose> <!--angles are in radian-->
+        <pose>0. 0.6 0.1 -1.5707 0 0</pose> <!--angles are in radian-->
         <inertial>
           <mass>2</mass>
           <inertia>
@@ -74,7 +74,7 @@
       </link>
 
       <link name='right_wheel'>
-        <pose relative_to="chassis">-0.5 -0.6 -0.2 -1.5707 0 0</pose> <!--angles are in radian-->
+        <pose>0. -0.6 0.1 -1.5707 0 0</pose> <!--angles are in radian-->
         <inertial>
           <mass>2</mass>
           <inertia>
@@ -109,13 +109,9 @@
         </collision>
       </link>
 
-      <frame name="caster_frame" attached_to='chassis'>
-        <pose>0.8 0 -0.2 0 0 0</pose>
-      </frame>
-
       <!--caster wheel-->
       <link name='caster'>
-        <pose relative_to='caster_frame'/>
+        <pose>0.7 0 0.1 0 -0 0</pose>
         <inertial>
           <mass>1</mass>
           <inertia>
@@ -149,7 +145,7 @@
       </link>
 
       <link name="lidar_link">
-        <pose>0 0 0.5 0 0 0</pose>
+        <pose>0 0 0.55 0 0 0</pose>
         <inertial>
           <mass>0.1</mass>
           <inertia>
@@ -160,16 +156,18 @@
         </inertial>
         <collision name="collision">
           <geometry>
-            <box>
-              <size>0.1 0.1 0.1</size>
-            </box>
+            <cylinder>
+              <radius>0.2</radius>
+              <length>0.2</length>
+            </cylinder>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
-            <box>
-              <size>0.1 0.1 0.1</size>
-            </box>
+            <cylinder>
+              <radius>0.2</radius>
+              <length>0.2</length>
+            </cylinder>
           </geometry>
         </visual>
         <sensor name='gpu_lidar' type='gpu_lidar'>
@@ -180,10 +178,10 @@
           <lidar>
             <scan>
               <horizontal>
-                <samples>640</samples>
+                <samples>800</samples> <!-- actually 8000 -->
                 <resolution>1</resolution>
-                <min_angle>-1.396263</min_angle>
-                <max_angle>1.396263</max_angle>
+                <min_angle>0.</min_angle>
+                <max_angle>6.283</max_angle>
               </horizontal>
               <vertical>
                 <samples>1</samples>
@@ -193,8 +191,8 @@
               </vertical>
             </scan>
             <range>
-              <min>0.08</min>
-              <max>10.0</max>
+              <min>0.015</min>
+              <max>12.0</max>
               <resolution>0.01</resolution>
             </range>
           </lidar>
@@ -202,9 +200,30 @@
         </sensor>
       </link>
 
+      <link name='front_marker'>
+        <pose>1. 0. 0.25 0 0 0</pose> <!--angles are in radian-->
+        <visual name='visual_front_marker'>
+          <geometry>
+            <box>
+              <size>0.1 0.5 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.8 0.2 1</ambient>
+            <diffuse>0.1 0.8 0.2 1</diffuse>
+            <specular>0.1 0.8 0.2 1</specular>
+          </material>
+        </visual>
+      </link>
+
       <joint name='lidar_joint' type='fixed'>
         <parent>chassis</parent>
         <child>lidar_link</child>
+      </joint>
+
+       <joint name='marker_joint' type='fixed'>
+        <parent>chassis</parent>
+        <child>front_marker</child>
       </joint>
 
       <joint name='left_wheel_joint' type='revolute'>

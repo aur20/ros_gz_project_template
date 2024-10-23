@@ -110,99 +110,11 @@
       <pose>3 0 0.5 0 0 0</pose> <!-- Position of the entire labyrinth -->
 
       <link name="wall1">
-        <pose>0 0 0 0 0 0</pose> <!-- Position of the wall -->
+        <pose>0 1.5 0 0 0 0</pose> <!-- Position of the wall -->
         <collision name="collision1">
           <geometry>
             <box>
-              <size>1 7 1</size>
-            </box>
-          </geometry>
-        </collision>
-        <visual name="visual1">
-          <geometry>
-            <box>
-              <size>1 7 1</size>
-            </box>
-          </geometry>
-          <material>
-            <ambient>0.3 0.3 0.3 1</ambient>
-            <diffuse>0.5 0.5 0.5 1</diffuse>
-          </material>
-        </visual>
-      </link>
-
-      <link name="wall2">
-        <pose>4 4 0 0 0 0</pose> <!-- Position of the wall -->
-        <collision name="collision1">
-          <geometry>
-            <box>
-              <size>9 1 1</size>
-            </box>
-          </geometry>
-        </collision>
-        <visual name="visual">
-          <geometry>
-            <box>
-              <size>9 1 1</size>
-            </box>
-          </geometry>
-          <material>
-            <ambient>0.3 0.3 0.3 1</ambient>
-            <diffuse>0.5 0.5 0.5 1</diffuse>
-          </material>
-        </visual>
-      </link>
-
-      <link name="wall3">
-        <pose>8 0 0 0 0 0</pose> <!-- Position of the wall -->
-        <collision name="collision1">
-          <geometry>
-            <box>
-              <size>1 7 1</size>
-            </box>
-          </geometry>
-        </collision>
-        <visual name="visual1">
-          <geometry>
-            <box>
-              <size>1 7 1</size>
-            </box>
-          </geometry>
-          <material>
-            <ambient>0.3 0.3 0.3 1</ambient>
-            <diffuse>0.5 0.5 0.5 1</diffuse>
-          </material>
-        </visual>
-      </link>
-
-      <link name="wall4">
-        <pose>6 -4 0 0 0 0</pose> <!-- Position of the wall -->
-        <collision name="collision1">
-          <geometry>
-            <box>
-              <size>5 1 1</size>
-            </box>
-          </geometry>
-        </collision>
-        <visual name="visual">
-          <geometry>
-            <box>
-              <size>5 1 1</size>
-            </box>
-          </geometry>
-          <material>
-            <ambient>0.3 0.3 0.3 1</ambient>
-            <diffuse>0.5 0.5 0.5 1</diffuse>
-          </material>
-        </visual>
-      </link>
-
-      <link name="wall5">
-        <pose>4 -1.5 0 0 0 0</pose> <!-- Position of the wall -->
-        <collision name="collision1">
-          <geometry>
-            <box>
-              <size>1 5 1</size>
+              <size>1 4 1</size>
             </box>
           </geometry>
         </collision>
@@ -218,6 +130,183 @@
           </material>
         </visual>
       </link>
+
+      <link name="wall2">
+        <pose>8 1.5 0 0 0 0</pose> <!-- Position of the wall -->
+        <collision name="collision1">
+          <geometry>
+            <box>
+              <size>1 4 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual1">
+          <geometry>
+            <box>
+              <size>1 4 1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+
+      <link name="wall3">
+        <pose>16 1.5 0 0 0 0</pose> <!-- Position of the wall -->
+        <collision name="collision1">
+          <geometry>
+            <box>
+              <size>1 4 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual1">
+          <geometry>
+            <box>
+              <size>1 4 1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+
+      <link name="wall4">
+        <pose>12 -1.5 0 0 0 0</pose> <!-- Position of the wall -->
+        <collision name="collision1">
+          <geometry>
+            <box>
+              <size>1 4 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual1">
+          <geometry>
+            <box>
+              <size>1 4 1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+
+      <link name="wall5">
+        <pose>4 -1.5 0 0 0 0</pose> <!-- Position of the wall -->
+        <collision name="collision1">
+          <geometry>
+            <box>
+              <size>1 4 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual1">
+          <geometry>
+            <box>
+              <size>1 4 1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+
+      <link name="wall6">
+        <pose>20 -1.5 0 0 0 0</pose> <!-- Position of the wall -->
+        <collision name="collision1">
+          <geometry>
+            <box>
+              <size>1 4 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual1">
+          <geometry>
+            <box>
+              <size>1 4 1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+
+      <link name="wall7">
+        <pose>25 0 0 0 0 0</pose> <!-- Position of the wall -->
+        <collision name="collision1">
+          <geometry>
+            <box>
+              <size>1 9 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual1">
+          <geometry>
+            <box>
+              <size>1 9 1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+
+      <link name="wall8">
+        <pose>12 -4. 0 0 0 0</pose> <!-- Position of the wall -->
+        <collision name="collision1">
+          <geometry>
+            <box>
+              <size>25 1 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual1">
+          <geometry>
+            <box>
+              <size>25 1 1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+
+      <link name="wall9">
+        <pose>12 4. 0 0 0 0</pose> <!-- Position of the wall -->
+        <collision name="collision1">
+          <geometry>
+            <box>
+              <size>25 1 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual1">
+          <geometry>
+            <box>
+              <size>25 1 1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+
     </model>
     <!-- Moving Left-->
     <plugin filename="gz-sim-triggered-publisher-system"
