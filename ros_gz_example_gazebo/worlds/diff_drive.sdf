@@ -259,5 +259,35 @@
             linear: {x: -0.5}, angular: {z: 0.0}
         </output>
     </plugin>
+    <!-- Arc Right -->
+    <plugin filename="gz-sim-triggered-publisher-system"
+            name="gz::sim::systems::TriggeredPublisher">
+        <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+            <match field="data">78</match>
+        </input>
+        <output type="gz.msgs.Twist" topic="/model/diff_drive/cmd_vel">
+            linear: {x: 0.5}, angular: {z: -0.5}
+        </output>
+    </plugin>
+    <!-- Arc Left -->
+    <plugin filename="gz-sim-triggered-publisher-system"
+            name="gz::sim::systems::TriggeredPublisher">
+        <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+            <match field="data">86</match>
+        </input>
+        <output type="gz.msgs.Twist" topic="/model/diff_drive/cmd_vel">
+            linear: {x: 0.5}, angular: {z: 0.5}
+        </output>
+    </plugin>
+    <!-- Stop movement -->
+    <plugin filename="gz-sim-triggered-publisher-system"
+            name="gz::sim::systems::TriggeredPublisher">
+        <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+            <match field="data">66</match>
+        </input>
+        <output type="gz.msgs.Twist" topic="/model/diff_drive/cmd_vel">
+            linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}
+        </output>
+    </plugin>
   </world>
 </sdf>
