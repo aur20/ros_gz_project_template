@@ -15,6 +15,10 @@
 import rclpy
 from rclpy.node import Node
 
+from sensor_msgs.msg import LaserScan  # Example sensor message type for detecting obstacles
+from geometry_msgs.msg import Twist, Pose  # For robot motion control
+from nav_msgs.msg import Odometry  # For robot location
+
 from std_msgs.msg import String
 
 
@@ -26,6 +30,19 @@ class MinimalPublisher(Node):
         timer_period = 0.5  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
         self.i = 0
+
+        # Create publisher to control the robot's velocity
+        self.cmd_vel_pub = self.create_publisher(Twist, '/diff_drive/cmd_vel', 10, callback_group=self.callback_group)
+
+        # Subscribe to a topic that provides distance to obstacles (e.g., LIDAR or laser scanner)
+        self.obstacle_distance = float('inf')  # Initialize obstacle distance to a very high value
+        self.create_subscription(LaserScan, '/diff_drive/scan', self.scan_callback, 10, callback_group=self.callback_group)
+
+        # Subscribe to current robot state
+        self.initial_pose = False
+        self.robot_location = Pose()
+        self.create_subscription(Odometry, '/diff_drive/odometry', self.location_callback, 10, callback_group=self.callback_group)
+
 
     def timer_callback(self):
         msg = String()
