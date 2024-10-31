@@ -1,16 +1,4 @@
-# Copyright 2016 Open Source Robotics Foundation, Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+
 
 import rclpy
 from rclpy.node import Node
@@ -49,8 +37,14 @@ class Bug1():
         self.minDistance = float('inf')
         self.posMin = np.array([0.0, 0.0])
         self.posStartWF = np.array([0.0, 0.0])
-        self.distanceToWall = 0.0
+
         self.circumnavigate = False
+        self.laserRechtsHinten = 0
+        self.laserRechtsRechts = 0
+        self.laserRechtsVorne = 0
+        self.laserVorne = 0
+        
+        self.integral = 0
         
         self.state = self.Z_CALCMGV
 
@@ -66,8 +60,11 @@ class Bug1():
         if self.CalcDistanceToGoal() < self.minDistance:
             self.posMin = self.posRob
 
-    def SetLaser(self, ranges):
-        self.distanceToWall = ranges
+    def SetLaser(self, msg):
+        self.laserRechtsRechts= self.get_sector_min_distance(msg, 269,271)
+        self.laserVorne = self.get_sector_min_distance(msg, 30 ,330)
+        self.laserRechtsVorne = round(self.get_sector_min_distance(msg, 290,340), 1)
+        self.laserRechtsHinten = round(self.get_sector_min_distance(msg, 200,250), 1)
 
     def SetRoboPos(self, posRobo):
         self.posRob         = np.array([posRobo.x, posRobo.y])
@@ -76,7 +73,8 @@ class Bug1():
         self.presentAng     = self.CalcAngularZ(orientation.x, orientation.y, orientation.z, orientation.w)
     
     def CheckForWall(self):
-        return min(self.distanceToWall) < self.ThreshWF 
+        print(self.laserVorne)
+        return self.laserVorne < self.ThreshWF 
     
     def GetLinearX(self):
         return self.ctrlLinearX
@@ -91,11 +89,63 @@ class Bug1():
 
         return angularz # in radians
     
-    def CheckRightSide(self):
-        return round(((self.distanceToWall[0] + self.distanceToWall[3]) / 2) ,1)
+    def get_sector_min_distance(self, laser_msg, angle_min, angle_max):
+        
+        ranges = laser_msg.ranges
+        angle_min = angle_min / 360. * 2. * np.pi
+        angle_max = angle_max / 360. * 2. * np.pi
+
+        index_min = int((angle_min - laser_msg.angle_min)/ laser_msg.angle_increment)
+        index_max = int((angle_max - laser_msg.angle_min) / laser_msg.angle_increment)
+
+        range_min = np.min(ranges[index_min:index_max])
+        
+        return range_min
+
+    def CalcAngularSpeed(self, right_distance, desired_distance, kp, ki, direction):
+        
+        error = right_distance - desired_distance
+        error = abs(error)   
+            
+        proportional = kp * error
+        self.integral += error
+        integral = ki * self.integral
+        angular_speed = proportional + integral * direction
+        
+        self.last_error = error
+        
+        return angular_speed
+    
+    def WallFollowingAlg(self, desiredDistance, kp, ki):
+        
+
+        right_distance = self.laserRechtsRechts
+        if right_distance == np.inf:
+            right_distance = 4.0
+        
+        
+        print(self.laserRechtsVorne)
+        print(self.laserRechtsHinten)
+        
+        
+        
+        if  self.laserRechtsVorne < self.laserRechtsHinten:
+            direction = 1
+            linear_speed = 0.0
+            angular_speed = self.CalcAngularSpeed(right_distance, desiredDistance, kp, ki, direction)
+            
+        elif self.laserRechtsVorne > self.laserRechtsHinten:
+            direction = -1
+            linear_speed = 0.0
+            angular_speed = self.CalcAngularSpeed(right_distance, desiredDistance, kp, ki, direction)
+        else:
+            linear_speed = 0.1
+            angular_speed = 0.0
+
+        
+        return angular_speed, linear_speed
     
     def Run(self):
-
         
         ctrlLinearXTemp = 0
         ctrlAngularZTemp = self.presentAng
@@ -106,8 +156,6 @@ class Bug1():
             ctrlAngularZTemp = self.presentAng
             self.CalcMGV()
             self.state = self.Z_ROTATE
-            print('CalcMGV')
-            
             
         elif self.state == self.Z_ROTATE:
             
@@ -120,15 +168,13 @@ class Bug1():
                     ctrlAngularZTemp = 0.5
                 else:
                     ctrlAngularZTemp = -0.5
-                    
-            print('Rotate')
-            print(f'mvgAngle: {self.mgvAngle}')
-            print(f'presentAngle: {self.presentAng}')
+
         
         elif self.state == self.Z_FOLLOW_MGV:
             
             ctrlAngularZTemp = 0.0
-
+            
+             
             if self.CheckForWall():
 
                 ctrlLinearXTemp= 0.0
@@ -141,22 +187,12 @@ class Bug1():
                 self.state = self.Z_END
                 
             else:
-                ctrlLinearXTemp= 1.0
-                 
-            print('Follow')
+                ctrlLinearXTemp= 3.0
             
         elif self.state == self.Z_WALLFOLLOWING:
-
-            if round(self.distanceToWall[6],1) > self.ThreshWF:
-                ctrlAngularZTemp = -0.3
-                ctrlLinearXTemp = 0.1
-            elif round(self.distanceToWall[6],1) < self.ThreshWF:
-                ctrlAngularZTemp = 0.3
-                ctrlLinearXTemp = 0.1
-            else:
-                ctrlLinearXTemp = 1.0
-                ctrlAngularZTemp = 0.0
-
+            
+            ctrlAngularZTemp, ctrlLinearXTemp = self.WallFollowingAlg(0.6, 0.1, 0.001)
+            
             if not self.circumnavigate:
                 self.SearchBestPoint()
                 if (self.posRob[1] == self.posStartWF[1]) and (self.posRob[0] == self.posStartWF[0]):
@@ -165,12 +201,11 @@ class Bug1():
                 if (self.posRob[1] == self.posMin[1]) and (self.posRob[0] == self.posMin[0]):
                     self.state = self.Z_CALCMGV
                     self.circumnavigate = False
-        
-            print('Wallfollowing')
-            #print(f'distance: {self.CheckRightSide()}')
+
         
         elif self.state == self.Z_END:
-            print('End')
+            print('Finish')
+            exit()
             
         self.ctrlLinearX = ctrlLinearXTemp
         self.ctrlAngularZ = ctrlAngularZTemp
@@ -179,10 +214,9 @@ class MinimalPublisher(Node):
 
     def __init__(self):
         super().__init__('minimal_publisher')
-        self.bug1Handler = Bug1(np.array([0.0,0.0]) , np.array([1.0,1.0]) )
+        self.bug1Handler = Bug1(np.array([0.0,0.0]) , np.array([1.0,1.3]) )
         
-        
-        
+
         self.timer = self.create_timer(0.1, self.timer_callback)
         
 
@@ -202,28 +236,19 @@ class MinimalPublisher(Node):
         velocity_cmd = Twist()
         velocity_cmd.linear.x = self.bug1Handler.GetLinearX()
         velocity_cmd.angular.z = self.bug1Handler.GetAngularZ()
-        #self.cmd_vel_pub.publish(velocity_cmd)
-        
-        
-        #self.get_logger().info('linear x: "%s"' % velocity_cmd.linear.x)
-        #self.get_logger().info('angular z: "%s"' % velocity_cmd.angular.z)
+        self.cmd_vel_pub.publish(velocity_cmd)
+
 
         
     def scan_callback(self, msg):        
-        self.bug1Handler.SetLaser(msg.ranges)
-        self.get_logger().info('Scan Ranges: "%s"' % msg.ranges)
+        self.bug1Handler.SetLaser(msg)
+
         
     def location_callback(self, msg):
         
         self.bug1Handler.SetRoboPos(msg.pose.pose.position)
         self.bug1Handler.SetRoboAngle(msg.pose.pose.orientation)
-        #self.get_logger().info('location x: "%s"' % msg.pose.pose.position.x)
-        #self.get_logger().info('location y: "%s"' % msg.pose.pose.position.y)
-        #self.get_logger().info('angular z: "%s"' % msg.pose.pose.orientation)
         
-
-        
-
 
 def main(args=None):
     rclpy.init(args=args)
@@ -232,10 +257,7 @@ def main(args=None):
     
 
     rclpy.spin(minimal_publisher)
-
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
+    
     minimal_publisher.destroy_node()
     rclpy.shutdown()
 
